@@ -144,3 +144,11 @@ test('rutas de API desconocidas devuelven JSON 404', async () => {
   assert.equal(respuesta.status, 404);
   assert.match(respuesta.headers.get('content-type'), /json/);
 });
+
+test('GET /api/configuracion entrega las áreas y el límite de foto', async () => {
+  const respuesta = await fetch(`${base}/api/configuracion`);
+  assert.equal(respuesta.status, 200);
+  const { areas, fotoMaxMb } = await respuesta.json();
+  assert.ok(areas.includes('Tecnología') && areas.length >= 2);
+  assert.equal(fotoMaxMb, LIMITE / 1024 / 1024);
+});
