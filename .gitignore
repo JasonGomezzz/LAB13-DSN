@@ -1,0 +1,32 @@
+# Dependencias y compilados
+node_modules/
+dist/
+build/
+npm-debug.log*
+
+# Variables de entorno (solo se versiona .env.example)
+.env
+.env.*
+!.env.example
+
+# Credenciales y estado de infraestructura
+*.pem
+*.key
+.aws/
+*.tfstate*
+.terraform/
+terraform.tfvars
+
+# Datos locales de LocalStack
+.localstack/
+localstack-data/
+
+# Logs y cobertura
+*.log
+coverage/
+
+# Sistema operativo y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
