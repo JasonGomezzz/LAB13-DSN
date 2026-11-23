@@ -32,6 +32,11 @@ p {
   margin: 0;
 }
 
+/* Los componentes definen su propio display; sin esto anularían el atributo hidden */
+[hidden] {
+  display: none !important;
+}
+
 h1,
 h2 {
   font-family: var(--f-titulo);
