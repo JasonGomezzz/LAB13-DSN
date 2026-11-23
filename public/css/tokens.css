@@ -1,0 +1,58 @@
+:root {
+  /* Superficies y tinta */
+  --papel: #edf0f4;
+  --superficie: #ffffff;
+  --tinta: #12203a;
+  --tinta-hover: #1e3359;
+  --apagado: #56627a;
+  --linea: #d3d9e3;
+  --linea-fuerte: #aab4c5;
+
+  /* Acentos de interacción */
+  --foco: #0b86ad;
+  --enlace: #0a6f8e;
+  --peligro: #b3261e;
+  --peligro-fondo: #fbeceb;
+  --exito: #1f7a54;
+
+  /* Tipografía */
+  --f-titulo: 'Bricolage Grotesque Variable', 'Avenir Next Condensed', 'Arial Narrow', sans-serif;
+  --f-texto: 'Instrument Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Radios con jerarquía: controles < paneles < credencial */
+  --radio-control: 8px;
+  --radio-foto: 10px;
+  --radio-carnet: 18px;
+
+  --ease-salida: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/*
+ * Un color por área. Todos son lo bastante claros para llevar texto en tinta
+ * encima con contraste mayor a 4.5:1 (franja del carnet) y se repiten en la
+ * lista y en los filtros, así el color siempre significa lo mismo.
+ */
+:root {
+  --area: #a9b4c8;
+}
+[data-area='Tecnología'] {
+  --area: #2bb3dd;
+}
+[data-area='Recursos Humanos'] {
+  --area: #ef7ea0;
+}
+[data-area='Finanzas'] {
+  --area: #4cc08d;
+}
+[data-area='Operaciones'] {
+  --area: #f0a93a;
+}
+[data-area='Comercial'] {
+  --area: #9a8cf0;
+}
+[data-area='Marketing'] {
+  --area: #e07ad0;
+}
+[data-area='Legal'] {
+  --area: #9fb0c8;
+}
