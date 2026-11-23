@@ -56,22 +56,36 @@ export const empleadosRepository = {
   },
 
   /**
-   * Actualiza solo los campos indicados. Devuelve el empleado actualizado,
-   * o null si el empleadoId no existe (no crea registros nuevos por accidente).
+   * Actualiza solo los campos indicados. Un valor `null` ELIMINA el atributo del item
+   * (en lugar de guardar un NULL). Devuelve el empleado actualizado, o null si el
+   * empleadoId no existe (no crea registros nuevos por accidente).
    */
   async actualizar(empleadoId, campos) {
     const nombres = Object.keys(campos);
+    const aEstablecer = nombres.filter((n) => campos[n] !== null);
+    const aQuitar = nombres.filter((n) => campos[n] === null);
+    const marcador = (n) => `#c${nombres.indexOf(n)}`;
+
+    const clausulas = [];
+    if (aEstablecer.length) {
+      clausulas.push(`SET ${aEstablecer.map((n) => `${marcador(n)} = :v${nombres.indexOf(n)}`).join(', ')}`);
+    }
+    if (aQuitar.length) clausulas.push(`REMOVE ${aQuitar.map(marcador).join(', ')}`);
+
     try {
       const { Attributes } = await dynamo.send(
         new UpdateCommand({
           TableName,
           Key: { empleadoId },
           ConditionExpression: 'attribute_exists(empleadoId)',
-          UpdateExpression: `SET ${nombres.map((_, i) => `#c${i} = :v${i}`).join(', ')}`,
+          UpdateExpression: clausulas.join(' '),
           ExpressionAttributeNames: Object.fromEntries(nombres.map((n, i) => [`#c${i}`, n])),
-          ExpressionAttributeValues: Object.fromEntries(
-            nombres.map((n, i) => [`:v${i}`, campos[n]]),
-          ),
+          // DynamoDB rechaza un mapa de valores vacío, así que solo se envía si hay SET.
+          ...(aEstablecer.length && {
+            ExpressionAttributeValues: Object.fromEntries(
+              aEstablecer.map((n) => [`:v${nombres.indexOf(n)}`, campos[n]]),
+            ),
+          }),
           ReturnValues: 'ALL_NEW',
         }),
       );

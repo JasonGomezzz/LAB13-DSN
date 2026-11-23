@@ -19,6 +19,8 @@ export function entorno() {
     async actualizar(id, campos) {
       if (!tabla.has(id)) return null;
       const nuevo = { ...tabla.get(id), ...campos };
+      // Mismo contrato que el repositorio real: null elimina el atributo.
+      for (const [campo, valor] of Object.entries(campos)) if (valor === null) delete nuevo[campo];
       tabla.set(id, nuevo);
       return { ...nuevo };
     },

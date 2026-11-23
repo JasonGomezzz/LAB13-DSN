@@ -114,10 +114,11 @@ test('obtenerFoto falla con 404 si el empleado no tiene foto', async () => {
 });
 
 test('quitarFoto deja al empleado sin foto y limpia S3', async () => {
-  const { servicio, objetos } = entorno();
+  const { servicio, objetos, tabla } = entorno();
   const { empleadoId } = await servicio.crear(cuerpo());
   await servicio.subirFoto(empleadoId, PNG);
   const sinFoto = await servicio.quitarFoto(empleadoId);
   assert.equal(sinFoto.fotoUrl, null);
   assert.equal(objetos.size, 0);
+  assert.ok(!('fotoKey' in tabla.get(empleadoId)), 'el atributo se elimina, no se guarda como null');
 });
