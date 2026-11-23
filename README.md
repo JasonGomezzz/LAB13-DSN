@@ -48,24 +48,37 @@ Si el puerto 3000 está ocupado, cambia `PORT` en `.env`.
 
 ## Pasar a AWS real
 
-El código es el mismo; solo cambia la configuración. No pongas claves en `.env`: usa un perfil de AWS CLI o el rol de la instancia.
+El código es el mismo; solo cambia la configuración. No pongas claves en ningún archivo: usa un perfil de AWS CLI o el rol de la instancia.
 
-1. En `.env`: deja `AWS_ENDPOINT_URL=` vacío, borra `AWS_ACCESS_KEY_ID` y `AWS_SECRET_ACCESS_KEY`, y define `AWS_PROFILE=<tu-perfil>`.
-2. Cambia `S3_BUCKET` por un nombre **único en todo el mundo** (S3 comparte el espacio de nombres entre cuentas).
-3. Inicia sesión (`aws sso login --profile <tu-perfil>`) y crea los recursos:
+1. Crea un archivo `.env.aws` (queda ignorado por git) **sin** `AWS_ENDPOINT_URL` ni claves, así no choca con tu `.env` de LocalStack:
+
+```
+PORT=3000
+AWS_REGION=us-east-1
+AWS_PROFILE=<tu-perfil>
+DYNAMODB_TABLE=empleados
+S3_BUCKET=<nombre-unico-en-todo-el-mundo>
+MAX_FOTO_MB=2
+```
+
+2. Inicia sesión (`aws login --profile <tu-perfil>` o `aws sso login --profile <tu-perfil>`), crea los recursos y arranca la app:
 
 ```bash
-npm run aws:crear
-npm start
+npm run aws:crear:real
+npm run start:aws
 ```
+
+S3 comparte el espacio de nombres entre todas las cuentas, por eso el nombre del bucket debe ser único.
 
 **Costo aproximado:** la tabla usa facturación bajo demanda y el bucket almacena imágenes de pocos KB; para este laboratorio equivale a centavos o cero dentro de la capa gratuita.
 
 **Limpieza al terminar** (borra la tabla y el bucket con todas las fotos; pide confirmación explícita):
 
 ```bash
-npm run aws:eliminar -- --si
+npm run aws:eliminar:real -- --si
 ```
+
+En local, la limpieza es `npm run aws:eliminar -- --si`.
 
 ### Permisos IAM mínimos
 
@@ -174,8 +187,8 @@ Las pruebas usan repositorios en memoria, así que no requieren Docker. Contra L
 
 Esto no puedo hacerlo yo porque requiere tu cuenta o tu criterio:
 
-- [ ] Iniciar sesión en AWS, definir `AWS_PROFILE` y un `S3_BUCKET` único, y ejecutar `npm run aws:crear`.
-- [ ] Crear 3 o más empleados desde la interfaz, con foto, contra AWS real.
+- [x] Crear la tabla y el bucket en AWS real (hecho: `npm run aws:crear:real`, ver `docs/evidencias/aws-real.md`).
+- [ ] Arrancar con `npm run start:aws` y crear 3 o más empleados desde la interfaz, con foto, contra AWS real.
 - [ ] **Capturas** (guárdalas en `docs/capturas/` con estos nombres):
   - [ ] `01-dynamodb-tabla.png`: consola de DynamoDB, tabla `empleados`, pestaña Elementos de la tabla.
   - [ ] `02-s3-fotos.png`: consola de S3, bucket, carpeta `empleados/` con las imágenes.
@@ -186,7 +199,7 @@ Esto no puedo hacerlo yo porque requiere tu cuenta o tu criterio:
   - [ ] `07-npm-test.png`: salida de `npm test`.
 - [ ] Revisar y firmar las conclusiones.
 - [ ] Hacer `git push`.
-- [ ] Al terminar, `npm run aws:eliminar -- --si` para no dejar recursos.
+- [ ] Al terminar, `npm run aws:eliminar:real -- --si` para no dejar recursos.
 
 ## Conclusiones (borrador, edítalas con tu voz)
 
