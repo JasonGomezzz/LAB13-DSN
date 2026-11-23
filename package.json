@@ -1,0 +1,26 @@
+{
+  "name": "lab13-dsn-empleados",
+  "version": "1.0.0",
+  "description": "CRUD de empleados con DynamoDB y fotos en S3 (Laboratorio 13, Desarrollo de Soluciones en la Nube)",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.js",
+    "dev": "node --watch --env-file-if-exists=.env src/server.js",
+    "test": "node --test",
+    "aws:crear": "node --env-file-if-exists=.env scripts/aws/crear-recursos.js",
+    "aws:eliminar": "node --env-file-if-exists=.env scripts/aws/eliminar-recursos.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1175.0",
+    "@aws-sdk/client-s3": "^3.1175.0",
+    "@aws-sdk/lib-dynamodb": "^3.1175.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/instrument-sans": "^5.3.0",
+    "express": "^5.3.0",
+    "multer": "^2.5.0"
+  }
+}
