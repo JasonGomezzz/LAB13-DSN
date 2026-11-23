@@ -1,0 +1,339 @@
+.pagina {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 32px 112px;
+}
+
+/* ---------- Cabecera ---------- */
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px 24px;
+}
+
+.cabecera h1 {
+  font-size: clamp(2.75rem, 8vw, 4.75rem);
+}
+
+.cabecera__conteo {
+  margin-right: auto;
+  padding-bottom: 0.45em;
+  font-size: 1.0625rem;
+  color: var(--apagado);
+}
+
+/* ---------- Búsqueda y filtros ---------- */
+.herramientas {
+  display: grid;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.buscador input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px 0 46px;
+  border: 1.5px solid var(--linea-fuerte);
+  border-radius: var(--radio-control);
+  background: var(--superficie)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2356627a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E")
+    no-repeat 15px center;
+}
+
+.buscador input:hover {
+  border-color: var(--apagado);
+}
+
+.buscador input:focus-visible {
+  border-color: var(--tinta);
+  outline-offset: 0;
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1.5px solid var(--linea-fuerte);
+  border-radius: var(--radio-control);
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.filtro:hover {
+  background: var(--superficie);
+  border-color: var(--tinta);
+}
+
+.filtro[aria-pressed='true'] {
+  background: var(--tinta);
+  border-color: var(--tinta);
+  color: #fff;
+}
+
+.filtro__punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--area);
+}
+
+.filtro__cuenta {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--apagado);
+}
+
+.filtro[aria-pressed='true'] .filtro__cuenta {
+  color: rgb(255 255 255 / 0.72);
+}
+
+/* ---------- Tabla ---------- */
+.tabla {
+  width: 100%;
+  margin-top: 28px;
+  border-collapse: collapse;
+}
+
+.tabla th {
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--tinta);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-align: left;
+  color: var(--apagado);
+}
+
+.tabla td {
+  padding: 12px;
+  border-bottom: 1px solid var(--linea);
+  vertical-align: middle;
+}
+
+.tabla tbody tr {
+  transition: background-color 0.15s;
+}
+
+.tabla tbody tr:hover {
+  background: rgb(255 255 255 / 0.7);
+}
+
+.tabla .col-foto {
+  width: 68px;
+  padding-right: 0;
+}
+
+.tabla .col-ingreso {
+  white-space: nowrap;
+}
+
+.tabla .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: var(--radio-foto);
+  background: color-mix(in srgb, var(--area) 38%, var(--tinta));
+  color: #fff;
+  font-family: var(--f-titulo);
+  font-stretch: 75%;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fila__nombre {
+  font-family: var(--f-titulo);
+  font-stretch: 85%;
+  font-size: 1.1875rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.fila__cargo {
+  font-size: 0.875rem;
+  color: var(--apagado);
+}
+
+.punto {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--area);
+}
+
+.fila__acciones {
+  white-space: nowrap;
+}
+
+.fila__botones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.fila__area-movil {
+  display: none;
+  align-items: center;
+  margin-top: 2px;
+  font-size: 0.8125rem;
+}
+
+/* Tras guardar, la fila se resalta un momento para ubicar el cambio */
+.fila--reciente {
+  animation: fila-reciente 1.8s ease-out;
+}
+
+@keyframes fila-reciente {
+  from {
+    background: color-mix(in srgb, var(--area) 40%, #fff);
+  }
+}
+
+/* ---------- Carga ---------- */
+.avatar--esqueleto {
+  background: var(--linea);
+}
+
+.esqueleto {
+  display: block;
+  height: 14px;
+  border-radius: 6px;
+  background: var(--linea);
+  animation: latido 1.4s ease-in-out infinite;
+}
+
+.esqueleto--largo {
+  width: min(220px, 80%);
+}
+
+.esqueleto--corto {
+  width: 90px;
+  margin-top: 8px;
+}
+
+td:not(:nth-child(2)) > .esqueleto--corto {
+  margin-top: 0;
+}
+
+@keyframes latido {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* ---------- Estados: vacío, sin resultados, error ---------- */
+.estado {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  padding: 56px 8px;
+}
+
+.estado__ilustracion {
+  flex: none;
+}
+
+.estado__texto {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  max-width: 46ch;
+}
+
+.estado__texto h2 {
+  font-size: 2.25rem;
+}
+
+.estado__texto p {
+  margin-bottom: 8px;
+  color: var(--apagado);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .col-correo {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .pagina {
+    padding: 32px 16px 96px;
+  }
+  .cabecera {
+    align-items: center;
+  }
+  .cabecera .boton {
+    width: 100%;
+    order: 3;
+  }
+
+  /* Los filtros pasan a una sola fila deslizable en lugar de ocupar tres */
+  .filtros {
+    flex-wrap: nowrap;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .filtro {
+    flex: none;
+  }
+
+  /* El área baja debajo del cargo y se liberan columnas para el nombre */
+  .col-area,
+  .col-ingreso,
+  .col-salario {
+    display: none;
+  }
+  .fila__area-movil {
+    display: flex;
+  }
+  .fila__nombre {
+    font-size: 1.0625rem;
+  }
+  .tabla td {
+    padding-inline: 8px;
+  }
+  .tabla .col-foto {
+    width: 56px;
+  }
+  .fila__botones {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  .estado {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}

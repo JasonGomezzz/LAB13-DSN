@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Empleados</title>
+    <meta name="description" content="Directorio de empleados con fotos almacenadas en Amazon S3 y datos en Amazon DynamoDB." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="/fuentes/bricolage/wdth.css" />
+    <link rel="stylesheet" href="/fuentes/instrument/index.css" />
+    <link rel="stylesheet" href="/css/tokens.css" />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/lista.css" />
+    <link rel="stylesheet" href="/css/carnet.css" />
+    <link rel="stylesheet" href="/css/panel.css" />
+  </head>
+  <body>
+    <main class="pagina">
+      <header class="cabecera">
+        <h1>Empleados</h1>
+        <p class="cabecera__conteo" id="conteo" aria-live="polite"></p>
+        <button type="button" class="boton boton--primario" id="boton-nuevo">Nuevo empleado</button>
+      </header>
+
+      <section class="herramientas" id="herramientas" aria-label="Buscar y filtrar">
+        <div class="buscador">
+          <label for="buscar" class="visualmente-oculto">Buscar empleados</label>
+          <input id="buscar" type="search" placeholder="Nombre, DNI, cargo o correo" autocomplete="off" />
+        </div>
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por área"></div>
+      </section>
+
+      <table class="tabla" id="tabla">
+        <caption class="visualmente-oculto">Lista de empleados</caption>
+        <thead>
+          <tr>
+            <th class="col-foto"><span class="visualmente-oculto">Foto</span></th>
+            <th>Empleado</th>
+            <th class="col-area">Área</th>
+            <th class="col-correo">Correo</th>
+            <th class="col-ingreso">Ingreso</th>
+            <th class="col-salario num">Salario</th>
+            <th><span class="visualmente-oculto">Acciones</span></th>
+          </tr>
+        </thead>
+        <tbody id="filas"></tbody>
+      </table>
+      <div id="estado" aria-live="polite"></div>
+    </main>
+
+    <!-- Alta y edición -->
+    <dialog class="panel" id="panel" aria-labelledby="panel-titulo">
+      <form class="panel__form" id="form-empleado" novalidate>
+        <header class="panel__cabecera">
+          <h2 id="panel-titulo">Nuevo empleado</h2>
+          <button type="button" class="boton boton--secundario" data-cerrar>Cerrar</button>
+        </header>
+
+        <div class="panel__cuerpo">
+          <div class="panel__campos">
+            <p class="aviso-error" id="form-error" role="alert" hidden></p>
+
+            <div class="campo">
+              <label for="f-dni">DNI</label>
+              <input id="f-dni" name="dni" inputmode="numeric" maxlength="8" autocomplete="off" required />
+              <p class="campo__error" id="e-dni" hidden></p>
+            </div>
+            <div class="campo">
+              <label for="f-correo">Correo</label>
+              <input id="f-correo" name="correo" type="email" autocomplete="off" required />
+              <p class="campo__error" id="e-correo" hidden></p>
+            </div>
+
+            <div class="campo">
+              <label for="f-nombres">Nombres</label>
+              <input id="f-nombres" name="nombres" autocomplete="off" required />
+              <p class="campo__error" id="e-nombres" hidden></p>
+            </div>
+            <div class="campo">
+              <label for="f-apellidos">Apellidos</label>
+              <input id="f-apellidos" name="apellidos" autocomplete="off" required />
+              <p class="campo__error" id="e-apellidos" hidden></p>
+            </div>
+
+            <div class="campo">
+              <label for="f-cargo">Cargo</label>
+              <input id="f-cargo" name="cargo" autocomplete="off" required />
+              <p class="campo__error" id="e-cargo" hidden></p>
+            </div>
+            <div class="campo">
+              <label for="f-area">Área</label>
+              <select id="f-area" name="area" required></select>
+              <p class="campo__error" id="e-area" hidden></p>
+            </div>
+
+            <div class="campo">
+              <label for="f-salario">Salario mensual (S/)</label>
+              <input id="f-salario" name="salario" type="number" inputmode="decimal" min="0" max="1000000" step="0.01" required />
+              <p class="campo__error" id="e-salario" hidden></p>
+            </div>
+            <div class="campo">
+              <label for="f-fecha">Fecha de ingreso</label>
+              <input id="f-fecha" name="fechaIngreso" type="date" required />
+              <p class="campo__error" id="e-fechaIngreso" hidden></p>
+            </div>
+
+            <div class="campo campo--foto campo--completo">
+              <label for="f-foto">Foto</label>
+              <input id="f-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="foto-ayuda" />
+              <p class="campo__ayuda" id="foto-ayuda"></p>
+              <p class="campo__error" id="e-foto" hidden></p>
+              <button type="button" class="boton boton--texto es-peligro" id="quitar-foto" hidden>Quitar foto</button>
+            </div>
+          </div>
+
+          <aside class="panel__vista">
+            <h3>Así se verá su credencial</h3>
+            <div id="carnet-montaje"></div>
+          </aside>
+        </div>
+
+        <footer class="panel__pie">
+          <button type="button" class="boton boton--secundario" data-cerrar>Cancelar</button>
+          <button type="submit" class="boton boton--primario" id="boton-guardar">Guardar empleado</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <!-- Confirmación al eliminar -->
+    <dialog class="confirmar" id="dialogo-eliminar" aria-labelledby="eliminar-titulo">
+      <h2 id="eliminar-titulo"></h2>
+      <p>Se borra su registro y su foto. Esta acción no se puede deshacer.</p>
+      <div class="confirmar__acciones">
+        <button type="button" class="boton boton--secundario" data-cerrar>Cancelar</button>
+        <button type="button" class="boton boton--peligro" id="eliminar-confirmar">Eliminar empleado</button>
+      </div>
+    </dialog>
+
+    <div class="avisos" id="avisos" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>
