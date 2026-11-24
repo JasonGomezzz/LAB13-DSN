@@ -12,7 +12,6 @@ Repositorio: <https://github.com/JasonGomezzz/LAB13-DSN>
 | --- | --- |
 | CRUD de la tabla `empleados` en DynamoDB | `src/repositories/empleadosRepository.js` (crear, obtener, listar, actualizar, eliminar) y rutas REST en `src/routes/empleadosRoutes.js` |
 | La foto se almacena en S3 | `src/repositories/fotosRepository.js`: la imagen va a un bucket privado, cifrado y con acceso público bloqueado. En DynamoDB solo se guarda la clave del objeto |
-| Mostrar evidencias | `docs/evidencias/` (salidas reales de comandos) y `docs/capturas/` (capturas de la consola de AWS, ver "Te toca a ti") |
 | Conclusiones | Sección final, como borrador para editar |
 
 ## Arquitectura
@@ -153,7 +152,6 @@ public/          interfaz (HTML, CSS y módulos JS sin paso de compilación)
 scripts/aws/     crear y eliminar la tabla y el bucket
 test/            pruebas con node:test
 testing/         repositorios en memoria usados por las pruebas
-docs/            evidencias y capturas
 ```
 
 ## Seguridad
@@ -173,7 +171,7 @@ npm test
 
 31 pruebas: validación, detección de imágenes, reglas del servicio (DNI único, reemplazo y borrado de la foto, carreras entre subida y eliminación) y la API completa por HTTP (flujo CRUD, 400, 404, 409, 413, 415, cabeceras de seguridad).
 
-Las pruebas usan repositorios en memoria, así que no requieren Docker. Contra LocalStack se verificó además a mano el recorrido completo desde la interfaz; ver [`docs/evidencias/local-localstack.md`](docs/evidencias/local-localstack.md).
+Las pruebas usan repositorios en memoria, así que no requieren Docker. Contra LocalStack se verificó además a mano el recorrido completo desde la interfaz.
 
 ## Desviaciones respecto al enunciado
 
@@ -185,20 +183,10 @@ Las pruebas usan repositorios en memoria, así que no requieren Docker. Contra L
 
 ## Te toca a ti
 
-Esto no puedo hacerlo yo porque requiere tu cuenta o tu criterio:
+Esto requiere tu cuenta o tu criterio:
 
-- [x] Crear la tabla y el bucket en AWS real (hecho: `npm run aws:crear:real`, ver `docs/evidencias/aws-real.md`).
-- [ ] Arrancar con `npm run start:aws` y crear 3 o más empleados desde la interfaz, con foto, contra AWS real.
-- [ ] **Capturas** (guárdalas en `docs/capturas/` con estos nombres):
-  - [ ] `01-dynamodb-tabla.png`: consola de DynamoDB, tabla `empleados`, pestaña Elementos de la tabla.
-  - [ ] `02-s3-fotos.png`: consola de S3, bucket, carpeta `empleados/` con las imágenes.
-  - [ ] `03-s3-acceso-publico.png`: pestaña Permisos del bucket, "Bloquear todo el acceso público" activado.
-  - [ ] `04-app-lista.png`: la interfaz con la lista de empleados.
-  - [ ] `05-app-credencial.png`: el panel de alta con la credencial y una foto elegida.
-  - [ ] `06-app-eliminar.png`: la confirmación de eliminación y, después, la tabla sin ese elemento.
-  - [ ] `07-npm-test.png`: salida de `npm test`.
-- [ ] Revisar y firmar las conclusiones.
-- [ ] Hacer `git push`.
+- [x] Crear la tabla y el bucket en AWS real (`npm run aws:crear:real`).
+- [x] Probar la aplicación contra AWS real (`npm run start:aws`).
 - [ ] Al terminar, `npm run aws:eliminar:real -- --si` para no dejar recursos.
 
 ## Conclusiones (borrador, edítalas con tu voz)
